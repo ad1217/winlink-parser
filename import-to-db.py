@@ -19,8 +19,8 @@ def init_db(conn: psycopg.Connection) -> None:
                 date timestamp with time zone NOT NULL,
                 type text,
                 "from" text NOT NULL,
-                "to" text array NOT NULL,
-                cc text array NOT NULL,
+                "to" text ARRAY NOT NULL,
+                cc text ARRAY NOT NULL,
                 subject text NOT NULL,
                 mbo text NOT NULL,
                 body text NOT NULL,
@@ -34,7 +34,7 @@ def init_db(conn: psycopg.Connection) -> None:
                 message_id varchar(12) NOT NULL,
                 name varchar(255),
                 content bytea NOT NULL,
-                CONSTRAINT fk_message FOREIGN KEY(message_id) REFERENCES message(mid)
+                CONSTRAINT fk_message FOREIGN KEY (message_id) REFERENCES message (mid)
             )
             """)
 
