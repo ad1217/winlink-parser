@@ -1,0 +1,10 @@
+[project]
+name = "winlink-parser"
+version = "0.1.0"
+description = "Parser and DB ingress for Winlink messages"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.ruff]
+line-length = 88
