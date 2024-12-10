@@ -107,6 +107,12 @@ def parse_file(conn: psycopg.Connection, filepath: Path):
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--init-db",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Whether or not to create the required tables and views (default: True)",
+    )
+    parser.add_argument(
         "conninfo",
         help="Postgres connection string (see https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)",
     )
@@ -124,7 +130,8 @@ if __name__ == "__main__":
     imported_dir.mkdir(exist_ok=True)
 
     with psycopg.connect(args.conninfo) as conn:
-        init_db(conn)
+        if args.init_db:
+            init_db(conn)
 
         for f in (mailbox_path).glob("*.b2f"):
             imported_filename = imported_dir / f.name
