@@ -38,6 +38,34 @@ def init_db(conn: psycopg.Connection) -> None:
             )
             """)
 
+        cur.execute("""
+            CREATE OR REPLACE VIEW form_data AS
+                SELECT
+                    attachment.message_id,
+                    substring(attachment.name, 'RMS_Express_Form_(.*).xml') AS form_filename,
+                    jsonb_object_agg(parameters.var_name, parameters.value) AS parameters,
+                    jsonb_object_agg(variables.var_name, variables.value) AS variables
+                FROM
+                    attachment,
+                    xmltable('/RMS_Express_Form/form_parameters/*'
+                        passing (convert_from(attachment.content, 'UTF8')::xml)
+                        columns
+                            var_name text path 'name()',
+                            value text path '.'
+                    ) AS parameters,
+                    xmltable('/RMS_Express_Form/variables/*'
+                        passing (convert_from(attachment.content, 'UTF8')::xml)
+                        columns
+                            var_name text path 'name()',
+                            value text path '.'
+                    ) AS variables
+                WHERE
+                    attachment.name LIKE 'RMS_Express_Form_%.xml'
+                GROUP BY
+                    message_id,
+                    attachment.name;
+        """)
+
 
 def parse_file(conn: psycopg.Connection, filepath: Path):
     d = filepath.read_bytes()
