@@ -13,9 +13,8 @@ def init_db(conn: psycopg.Connection) -> None:
     with conn.cursor() as cur:
         cur.execute("""
             CREATE TABLE IF NOT EXISTS message (
-                id serial PRIMARY KEY,
+                mid varchar(12) PRIMARY KEY,
                 original bytea NOT NULL,
-                mid varchar(12) UNIQUE NOT NULL,
                 date timestamp with time zone NOT NULL,
                 type text,
                 "from" text NOT NULL,
