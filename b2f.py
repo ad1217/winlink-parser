@@ -53,7 +53,12 @@ class B2FMessage:
             return header[0]
 
         body_length = int(get_single_header("body"))
-        body = contents[:body_length].decode("ascii")
+        content_type = (
+            get_single_header("content-type")
+            if "content-type" in casefolded_headers
+            else "iso-8859-1"
+        )
+        body = contents[:body_length].decode(content_type)
 
         # files are separated by "\r\n" (2 bytes)
         file_offset = int(body_length) + 2
