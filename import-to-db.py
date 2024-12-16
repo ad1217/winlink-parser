@@ -65,6 +65,15 @@ def init_db(conn: psycopg.Connection) -> None:
                     attachment.name;
         """)
 
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS message_annotation (
+                message_id varchar(12) PRIMARY KEY,
+                comments text,
+                errors text[],
+                CONSTRAINT fk_message FOREIGN KEY (message_id) REFERENCES message (mid)
+            );
+        """)
+
 
 def parse_file(conn: psycopg.Connection, filepath: Path):
     d = filepath.read_bytes()
