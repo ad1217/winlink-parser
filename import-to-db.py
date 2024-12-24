@@ -137,7 +137,7 @@ if __name__ == "__main__":
     imported_dir = mailbox_path / "imported"
     imported_dir.mkdir(exist_ok=True)
 
-    with psycopg.connect(args.conninfo) as conn:
+    with psycopg.connect(args.conninfo, autocommit=True) as conn:
         if args.init_db:
             init_db(conn)
 
