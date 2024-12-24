@@ -63,7 +63,7 @@ class B2FMessage:
         # files are separated by "\r\n" (2 bytes)
         file_offset = int(body_length) + 2
         files = []
-        for file_entry in casefolded_headers["file"]:
+        for file_entry in casefolded_headers.get("file", []):
             file_len, _, file_name = file_entry.partition(" ")
             file_end = file_offset + int(file_len)
             files.append((file_name, contents[file_offset:file_end]))
